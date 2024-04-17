@@ -23,7 +23,9 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <SessionProvider session={session}>{children}</SessionProvider>
+        <SessionProvider session={session}
+          basePath="/api/auth"
+        >{children}</SessionProvider>
       </body>
     </html>
   );
