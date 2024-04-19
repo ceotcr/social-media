@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { getServerSession } from "next-auth";
-import SessionProvider from "@/providers/SessionProvider";
+import { SessionProvider } from "@/providers/SessionProvider";
 import { authOptions } from "@/libs/authOptions";
+import ClientProviders from "./providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,10 +23,16 @@ export default async function RootLayout({
   );
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={inter.className + " h-full w-ull"}>
         <SessionProvider session={session}
           basePath="/api/auth"
-        >{children}</SessionProvider>
+        >
+          <ClientProviders>
+            <main className='flex flex-col justify-center items-center min-h-screen w-full bg-black text-white'>
+              {children}
+            </main>
+          </ClientProviders>
+        </SessionProvider>
       </body>
     </html>
   );

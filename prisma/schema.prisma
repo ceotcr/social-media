@@ -26,6 +26,8 @@ model User {
   comments    Comment[]
   posts       Post[]
   socialLinks SocialLink[]
+  followers   User[]       @relation("Followers")
+  following   User[]       @relation("Followers")
 
   // Optional for WebAuthn support
   Authenticator Authenticator[]
