@@ -24,10 +24,11 @@ model User {
   sessions      Session[]
 
   comments    Comment[]
+  likes       Like[]
   posts       Post[]
   socialLinks SocialLink[]
-  followers   User[]       @relation("Followers")
-  following   User[]       @relation("Followers")
+  followers   Follow[]     @relation("FollowTo")
+  following   Follow[]     @relation("FollowFrom")
 
   // Optional for WebAuthn support
   Authenticator Authenticator[]
@@ -98,6 +99,7 @@ model Post {
   author    User      @relation(fields: [authorId], references: [id])
   authorId  String
   comments  Comment[]
+  likes     Like[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
@@ -121,4 +123,24 @@ model Comment {
   authorId  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Follow {
+  id          String   @id @default(cuid())
+  follower    User     @relation("FollowFrom", fields: [followerId], references: [id])
+  followerId  String
+  following   User     @relation("FollowTo", fields: [followingId], references: [id])
+  followingId String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

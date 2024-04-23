@@ -1,4 +1,5 @@
 'use client'
+import { CurrentUserProvider } from '@/contexts/CurrentUserContext'
 import { NextUIProvider } from '@nextui-org/react'
 import React from 'react'
 
@@ -10,9 +11,11 @@ const ClientProviders = (
     }
 ) => {
     return (
-        <NextUIProvider>
-            {children}
-        </NextUIProvider>
+        <CurrentUserProvider>
+            <NextUIProvider>
+                {children}
+            </NextUIProvider>
+        </CurrentUserProvider>
     )
 }
 

@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import { getServerSession } from "next-auth";
 import { SessionProvider } from "@/providers/SessionProvider";
 import { authOptions } from "@/libs/authOptions";
 import ClientProviders from "./providers";
+import Sidebar from "@/components/Layout/Sidebar";
 
-const inter = Inter({ subsets: ["latin"] });
+const font = Poppins({ subsets: ["latin"], weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -23,13 +24,14 @@ export default async function RootLayout({
   );
   return (
     <html lang="en">
-      <body className={inter.className + " h-full w-ull"}>
+      <body className={font.className + " bg-black text-white"}>
         <SessionProvider session={session}
           basePath="/api/auth"
         >
           <ClientProviders>
-            <main className='flex flex-col justify-center items-center min-h-screen w-full bg-black text-white'>
-              {children}
+            <main className='flex h-screen w-full gap-4'>
+              <Sidebar />
+              <div className="flex flex-col items-center justify-center w-full h-screen overflow-y-auto">{children}</div>
             </main>
           </ClientProviders>
         </SessionProvider>
