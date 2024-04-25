@@ -5,8 +5,13 @@ import {
     Tooltip
 } from '@nextui-org/react'
 import { HiPlus } from 'react-icons/hi';
+import { publishPost } from '@/libs/feed/Posts';
 const CreatePost = () => {
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const [data, setData] = React.useState({
+        title: '',
+        content: '',
+    })
     return (
         <>
             <Tooltip
@@ -38,17 +43,60 @@ const CreatePost = () => {
                             <ModalBody>
                                 <input placeholder='Title'
                                     className='w-full bg-[#1c1c1c] text-white rounded-lg p-2 mb-2 focus:outline-none'
+                                    value={data.title}
+                                    onChange={(e) => setData({ ...data, title: e.target.value })}
                                 />
                                 <textarea placeholder='Content'
+                                    value={data.content}
+                                    onChange={(e) => setData({ ...data, content: e.target.value })}
                                     className='w-full bg-[#1c1c1c] text-white rounded-lg p-2 mb-2 focus:outline-none'
                                 />
                             </ModalBody>
                             <ModalFooter>
-                                <Button color="danger" variant="light" onPress={onClose}>
-                                    Close
+                                <Button color="danger" variant="light" onPress={() => {
+                                    setData({
+                                        title: '',
+                                        content: ''
+                                    })
+                                    onClose()
+                                }}>
+                                    Discard
                                 </Button>
-                                <Button color="primary" onPress={onClose}>
-                                    Action
+                                <Button color="primary" onPress={async () => {
+                                    const res = await publishPost(
+                                        data.title,
+                                        data.content,
+                                        false
+                                    )
+                                    if (res) {
+                                        setData({
+                                            title: '',
+                                            content: ''
+                                        })
+                                        onClose()
+                                        alert('Post saved.')
+                                    }
+                                }}>
+                                    Save
+                                </Button>
+                                <Button color="success" onPress={
+                                    async () => {
+                                        const res = await publishPost(
+                                            data.title,
+                                            data.content,
+                                            true
+                                        )
+                                        if (res) {
+                                            setData({
+                                                title: '',
+                                                content: ''
+                                            })
+                                            onClose()
+                                            alert('Post created.')
+                                        }
+                                    }
+                                }>
+                                    Post
                                 </Button>
                             </ModalFooter>
                         </>

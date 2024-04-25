@@ -24,7 +24,11 @@ export default async function RootLayout({
   );
   return (
     <html lang="en">
-      <body className={font.className + " bg-black text-white"}>
+      <body className={font.className + " bg-black text-white"}
+        style={{
+          background: 'linear-gradient(180deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.65) 100%), url("/bg.jpg") center/cover fixed',
+        }}
+      >
         <SessionProvider session={session}
           basePath="/api/auth"
         >
