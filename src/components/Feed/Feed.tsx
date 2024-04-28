@@ -141,7 +141,7 @@ export const PostComp = ({ post, currentUser, isPage }: {
             <div className="flex gap-2 items-center p-4">
                 {
                     isLiked ?
-                        <MdFavorite color='pink' className=' cursor-pointer' size={24} onClick={
+                        <MdFavorite color='red' className=' cursor-pointer' size={24} onClick={
                             async () => {
                                 setIsLiked(false)
                                 setLikes(

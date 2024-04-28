@@ -21,14 +21,6 @@ const Sidebar = () => {
             link: '/network'
         },
         {
-            icon: <CiSearch className={`w-6 h-6 ${pathname === '/explore' ? 'text-blue-500' : 'text-slate-600 hover:text-blue-400'}`} />,
-            link: '/explore'
-        },
-        {
-            icon: <RiNotification2Fill className={`w-6 h-6 ${pathname === '/notifications' ? 'text-blue-500' : 'text-slate-600 hover:text-blue-400'}`} />,
-            link: '/notifications'
-        },
-        {
             icon: <MdAccountCircle className={`w-6 h-6 ${pathname === '/profile' ? 'text-blue-500' : 'text-slate-600 hover:text-blue-400'}`} />,
             link: '/profile'
         }
