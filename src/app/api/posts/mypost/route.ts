@@ -35,14 +35,17 @@ export const POST = async (req: Request) => {
                         }
                     },
                     published
+                },
+                include: {
+                    author: true,
+                    likes: true
                 }
             }
-
         )
         if (!post) {
             return NextResponse.json({ message: "Error creating post." }, { status: 500 })
         }
-        return NextResponse.json({ message: "Post created." }, {
+        return NextResponse.json({ message: "Post created.", data: post }, {
             status: 201
         })
     }
@@ -72,6 +75,12 @@ export const DELETE = async (req: Request) => {
             return NextResponse.json({ message: "User not found." }, { status: 404 })
         }
         const { id }: { id: string } = await req.json()
+        // delete all likes first
+        await prisma.like.deleteMany({
+            where: {
+                postId: id
+            }
+        })
         const post = await prisma.post.findFirst({
             where: {
                 id,
@@ -138,6 +147,46 @@ export const PUT = async (req: Request) => {
         return NextResponse.json({ message: "Post updated." }, {
             status: 200
         })
+    }
+    catch (error) {
+        console.error(error)
+        return NextResponse.json({ message: "An error occurred." }, { status: 500 })
+    }
+}
+
+
+export const GET = async (req: Request) => {
+    const session = await getServerSession(
+        authOptions,
+    )
+    if (!session?.user) {
+        return NextResponse.json({ message: "Unauthorized." }, { status: 401 })
+    }
+    try {
+        if (!session.user.email) {
+            return NextResponse.json({ message: "Unauthorized." }, { status: 401 })
+        }
+        const user = await prisma.user.findUnique({
+            where: {
+                email: session.user.email
+            }
+        })
+        if (!user) {
+            return NextResponse.json({ message: "User not found." }, { status: 404 })
+        }
+        const posts = await prisma.post.findMany({
+            where: {
+                authorId: user.id
+            },
+            include: {
+                author: true,
+                likes: true
+            }
+        })
+        if (!posts) {
+            return NextResponse.json({ message: "No posts found." }, { status: 404 })
+        }
+        return NextResponse.json(posts)
     }
     catch (error) {
         console.error(error)

@@ -1,16 +1,16 @@
 import React from "react";
-import { NewUser } from "@/libs/types";
+import { CurrentUser } from "@/libs/types";
 
 interface ContextProps {
-    currentUser: NewUser;
-    setCurrentUser: React.Dispatch<React.SetStateAction<NewUser>>;
+    currentUser: CurrentUser;
+    setCurrentUser: React.Dispatch<React.SetStateAction<CurrentUser>>;
     followUser: (followId: string) => Promise<boolean>;
     unfollowUser: (followId: string) => Promise<boolean>;
     loadingCurrentUser: boolean;
 }
 
 const defaultValue: ContextProps = {
-    currentUser: {} as NewUser,
+    currentUser: {} as CurrentUser,
     setCurrentUser: () => { },
     loadingCurrentUser: true,
     followUser: async () => false,
@@ -20,7 +20,7 @@ const defaultValue: ContextProps = {
 export const CurrentUserContext = React.createContext<ContextProps>(defaultValue);
 
 export const CurrentUserProvider = ({ children }: { children: React.ReactNode; }) => {
-    const [currentUser, setCurrentUser] = React.useState({} as NewUser);
+    const [currentUser, setCurrentUser] = React.useState({} as CurrentUser);
     const [loadingCurrentUser, setLoadingCurrentUser] = React.useState(true);
     React.useEffect(() => {
         setLoadingCurrentUser(true);

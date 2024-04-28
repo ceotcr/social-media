@@ -28,6 +28,11 @@ export const GET = async (req: Request) => {
             include: {
                 followers: true,
                 following: true,
+                _count: {
+                    select: {
+                        posts: true
+                    },
+                }
             }
         })
         if (!me) {

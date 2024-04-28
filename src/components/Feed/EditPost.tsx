@@ -1,66 +1,46 @@
 'use client'
-import React from 'react'
-import {
-    Modal, ModalContent, ModalBody, ModalFooter, ModalHeader, Button, Input, Textarea, useDisclosure,
-    Tooltip
-} from '@nextui-org/react'
-import { HiPlus } from 'react-icons/hi';
-import { publishPost } from '@/libs/feed/Posts';
-import { useSnackbar } from '@/contexts/SnackbarContext';
-const CreatePost = ({ setFeedPosts, feedPosts }: {
-    setFeedPosts: React.Dispatch<React.SetStateAction<{
-        id: string;
-        title: string;
-        content: string;
-        likes: import("@prisma/client").Like[];
-        author: {
-            name: string;
-            email: string;
-            image: string;
-        };
-    }[]>>
-    feedPosts: {
-        id: string;
-        title: string;
-        content: string;
-        likes: import("@prisma/client").Like[];
-        author: {
-            name: string;
-            email: string;
-            image: string;
-        };
-    }[]
-}) => {
-    const { showSnackbar } = useSnackbar()
+import { publishPost } from '@/libs/feed/Posts'
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from '@nextui-org/react'
+import React, { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { useSnackbar } from '@/contexts/SnackbarContext'
+
+const EditPost = ({ id, post }: { id: string, post: any }) => {
+    const router = useRouter()
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
+    const { showSnackbar } = useSnackbar()
     const [data, setData] = React.useState({
-        title: '',
-        content: '',
+        title: post.title,
+        content: post.content,
     })
+    const editedPublish = async (title: string, content: string, published: boolean) => {
+        const res = await fetch('/api/posts/mypost', {
+            method: 'PUT',
+            body: JSON.stringify({
+                id,
+                title,
+                content,
+                published
+            })
+        })
+        const json = await res.json()
+        if (res.ok) return true
+        return false
+    }
+    useEffect(() => {
+        onOpen();
+    }
+        , [onOpen])
     return (
         <>
-            <Tooltip
-                content='Create Post'
-                placement='left'
-                classNames={{
-                    content: 'bg-[#282828] text-white'
-                }}
-            >
-                <button
-                    onClick={onOpen}
-                    className='flex items-center gap-2 bg-[#282828] text-white p-2 rounded-lg fixed bottom-4 right-4 z-50'
-                >
-                    <HiPlus size={32} />
-                </button>
-            </Tooltip>
-
             <Modal isOpen={isOpen} onOpenChange={onOpenChange} closeButton
                 classNames={
                     {
-                        base: 'bg-[#282828] text-white',
+                        base: 'bg-[#282828] text-white z-50',
                     }
                 }
             >
+
                 <ModalContent>
                     {(onClose) => (
                         <>
@@ -88,26 +68,23 @@ const CreatePost = ({ setFeedPosts, feedPosts }: {
                                     Discard
                                 </Button>
                                 <Button color="primary" onPress={async () => {
-
-                                    if (!data.title || !data.content) {
-                                        showSnackbar(3000, 2, 'Please fill in all fields.')
-                                        return
-                                    }
                                     const res = await publishPost(
                                         data.title,
                                         data.content,
                                         false
                                     )
                                     if (res) {
+                                        if (!data.title || !data.content) {
+                                            showSnackbar(3000, 2, 'Please fill in all fields.')
+                                            return
+                                        }
                                         setData({
                                             title: '',
                                             content: ''
                                         })
-                                        setFeedPosts([res, ...feedPosts])
                                         onClose()
-                                        showSnackbar(3000, 0, 'Post saved.')
-                                    } else {
-                                        showSnackbar(3000, 1, 'Error saving post.')
+                                        showSnackbar(3000, 3, 'Post saved.')
+                                        router.push(`/post/${id}`)
                                     }
                                 }}>
                                     Save
@@ -118,7 +95,7 @@ const CreatePost = ({ setFeedPosts, feedPosts }: {
                                             showSnackbar(3000, 2, 'Please fill in all fields.')
                                             return
                                         }
-                                        const res = await publishPost(
+                                        const res = await editedPublish(
                                             data.title,
                                             data.content,
                                             true
@@ -128,12 +105,9 @@ const CreatePost = ({ setFeedPosts, feedPosts }: {
                                                 title: '',
                                                 content: ''
                                             })
-                                            setFeedPosts([res, ...feedPosts])
                                             onClose()
-                                            showSnackbar(3000, 0, 'Post published.')
-                                        }
-                                        else {
-                                            showSnackbar(3000, 1, 'Error publishing post.')
+                                            showSnackbar(3000, 0, 'Post Updated.')
+                                            router.push(`/post/${id}`)
                                         }
                                     }
                                 }>
@@ -148,4 +122,4 @@ const CreatePost = ({ setFeedPosts, feedPosts }: {
     )
 }
 
-export default CreatePost
+export default EditPost

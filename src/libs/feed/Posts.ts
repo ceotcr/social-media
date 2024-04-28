@@ -4,8 +4,7 @@ export const publishPost = async (
     published: boolean
 ) => {
     if (title.trim() === '' || content.trim() === '') {
-        alert('Title and content both are required.')
-        return false
+        return null
     }
     const response = await fetch('/api/posts/mypost', {
         method: 'POST',
@@ -20,7 +19,7 @@ export const publishPost = async (
     })
     const data = await response.json()
     if (response.ok) {
-        return true
+        return data.data
     }
-    return false
+    return null
 }

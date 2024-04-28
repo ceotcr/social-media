@@ -1,16 +1,24 @@
 'use client'
+import { PostComp } from '@/components/Feed/Feed'
 import UserCard from '@/components/Network/UserCard'
 import { useCurrentUser } from '@/contexts/CurrentUserContext'
 import { NewUser } from '@/libs/types'
+import { Divider } from '@nextui-org/react'
 import { User } from '@prisma/client'
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const Page = () => {
     const { currentUser, loadingCurrentUser } = useCurrentUser()
     const [followers, setFollowers] = React.useState<NewUser[]>([])
     const [following, setFollowing] = React.useState<NewUser[]>([])
+    const [userPosts, setUserPosts] = React.useState<User[]>([])
     const [showing, setShowing] = useState("")
+
+    useEffect(() => {
+        if (currentUser)
+            showPosts()
+    }, [currentUser])
     const showFollowers = async () => {
         if (!currentUser?.followers || currentUser?.followers.length === 0) {
             setFollowers([])
@@ -63,12 +71,25 @@ const Page = () => {
         setShowing("following")
         setFollowing(data.users || [])
     }
+    const showPosts = async () => {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/posts/mypost`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        const data = await res.json()
+        if (res.ok) {
+            setUserPosts(data || [])
+        }
+        setShowing("posts")
+    }
     if (loadingCurrentUser) {
         return <h1>Loading...</h1>
     }
     return (
-        <div className='grid gap-4 md:grid-cols-2 w-full p-4'>
-            <div className='flex flex-col gap-4'>
+        <div className='grid gap-4 items-center justify-center w-full p-4 h-full'>
+            <div className='flex flex-col items-center justify-center gap-4 py-8'>
                 <Image
                     src={currentUser?.image as string}
                     alt={currentUser?.name as string}
@@ -85,11 +106,24 @@ const Page = () => {
                     <button className='text-sm text-blue-500'
                         onClick={showFollowing}
                     >Following {currentUser?.following?.length || 0}</button>
+                    <button
+                        className='text-sm text-blue-500'
+                        onClick={
+                            showPosts
+                        }
+                    >Posts {currentUser?._count?.posts || 0}</button>
                 </div>
             </div>
-            <div className='flex gap-4 flex-col'>
-                <p className='text-xl'>{showing === "followers" ? "Followers" :
-                    showing === "following" && "Following"}</p>
+            <Divider className='bg-slate-400 max-w-xl w-full mx-auto' />
+            <div className='flex gap-4 flex-col w-full h-screen overflow-y-auto scrollbar-hide max-w-xl relative'>
+                <p className='text-xl sticky top-0 w-full p-4 bg-[#00000071] backdrop-blur-sm rounded-lg'>
+                    {
+                        showing === "followers" ? "Followers"
+                            : showing === "following" ? "Following"
+                                : showing === "posts" ? "Posts"
+                                    : null
+                    }
+                </p>
                 {
                     showing === "followers" ?
                         followers.length === 0 ?
@@ -99,14 +133,27 @@ const Page = () => {
                                 <UserCard key={follower.id} user={follower} />
                             ))
                         :
-                        showing === "following" &&
+                        showing === "following" ?
                             following.length === 0 ?
-                            <p>You are not following anyone!</p>
-                            :
-                            following.map((follow) => (
-                                <UserCard key={follow.id} user={follow} />
-                            ))
+                                <p>You are not following anyone!</p>
+                                :
+                                following.map((follow) => (
+                                    <UserCard key={follow.id} user={follow} />
+                                ))
+                            : null
+
                 }
+
+                {
+                    showing === "posts" ?
+                        userPosts.length === 0 ?
+                            <p>You have not posted anything yet!</p>
+                            :
+                            userPosts.map((post: any) => (
+                                <PostComp key={post.id} post={post} currentUser={currentUser} />
+                            )) : null
+                }
+
             </div>
         </div>
     )

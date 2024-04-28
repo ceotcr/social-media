@@ -1,9 +1,12 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/libs/prisma"
 export const GET = async (req: Request) => {
+    const page = new URL(req.url).searchParams.get("page")
+    const size = 2
     try {
         const posts = await prisma.post.findMany({
-            take: 20,
+            take: size,
+            skip: page ? (parseInt(page) - 1) * size : 0,
             include: {
                 author: {
                     select: {
@@ -11,13 +14,22 @@ export const GET = async (req: Request) => {
                         name: true,
                         email: true
                     }
+                },
+                likes: {
+                    select: {
+                        userId: true
+                    }
                 }
-            }
+            },
+            orderBy: {
+                createdAt: "desc"
+            },
         })
+        const totalPosts = await prisma.post.count()
         if (!posts) {
             return NextResponse.json({ message: "No posts found." }, { status: 404 })
         }
-        return NextResponse.json(posts)
+        return NextResponse.json({ posts, totalPosts })
     }
     catch (error) {
         console.error(error)

@@ -7,11 +7,13 @@ import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { PiPlugsConnectedLight } from "react-icons/pi";
 import { Button } from '@nextui-org/react'
+import { useSnackbar } from '@/contexts/SnackbarContext'
 
 const Page = () => {
     const router = useRouter()
     const { data: session } = useSession()
     const [loading, setLoading] = React.useState(false)
+    const { showSnackbar } = useSnackbar()
     return (
         <>
             {session ? (
@@ -57,9 +59,7 @@ const Page = () => {
                                     setLoading(true)
                                     signOut().then(
                                         () => {
-                                            alert(
-                                                "You have signed out"
-                                            )
+                                            showSnackbar(3000, 0, 'Signed out successfully')
                                             setLoading(false)
                                         }
                                     )
