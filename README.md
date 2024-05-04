@@ -1,36 +1,22 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# DevBoard
+- ### A Social Media Application
 
-## Getting Started
+![image](https://github.com/ceotcr/social-media/assets/68210482/d12fe21a-0123-4f96-9fe1-3ea850b897f4)
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- ### Built on top of T3 Stack [ NextJS, TypeScript, TailwindCSS ]
+![image](https://github.com/ceotcr/social-media/assets/68210482/c26e918e-fba2-4c2d-a186-35ab23c42d10)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- ## Features
+  - ### Authentication powered by GitHub using NextAuth
+  <img width="480px" src="https://github.com/ceotcr/social-media/assets/68210482/85fad371-4ddf-4c50-8b8d-4bd479c40fc4"/>
+  <img width="480px" src="https://github.com/ceotcr/social-media/assets/68210482/dacd272a-1fa1-49f4-82cd-d069a2fa90eb"/>
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-## Learn More
+  - ### Connect & Grow
+  ![image](https://github.com/ceotcr/social-media/assets/68210482/99e2dc18-d1bb-4cf7-a3a8-f8f4884972d9)
+  
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+  - ### Track your posts and connections
+  ![image](https://github.com/ceotcr/social-media/assets/68210482/7b2a7910-745c-48a6-a39c-56e34200754f)
