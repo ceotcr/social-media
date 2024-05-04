@@ -1,5 +1,7 @@
 # DevBoard
-- ### A Social Media Application
+- ### A Social Media Application For Developers.
+  
+  Developed as a part of WT's CIA Part B Activity
 
 ![image](https://github.com/ceotcr/social-media/assets/68210482/d12fe21a-0123-4f96-9fe1-3ea850b897f4)
 
@@ -20,3 +22,8 @@
 
   - ### Track your posts and connections
   ![image](https://github.com/ceotcr/social-media/assets/68210482/7b2a7910-745c-48a6-a39c-56e34200754f)
+
+
+  - ### Draft it, Edit it, Publish it or Simply delete it!
+  ![image](https://github.com/ceotcr/social-media/assets/68210482/f641c74c-1d7f-4137-b6d4-9909c57abf10)
+
