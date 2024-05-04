@@ -5,7 +5,9 @@ import { useCurrentUser } from '@/contexts/CurrentUserContext'
 import { NewUser } from '@/libs/types'
 import { Divider } from '@nextui-org/react'
 import { User } from '@prisma/client'
+import { useSession } from 'next-auth/react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 const Page = () => {
@@ -14,7 +16,13 @@ const Page = () => {
     const [following, setFollowing] = React.useState<NewUser[]>([])
     const [userPosts, setUserPosts] = React.useState<User[]>([])
     const [showing, setShowing] = useState("")
+    const router = useRouter()
 
+    const { data: session } = useSession()
+
+    if (!session) {
+        router.push('/auth')
+    }
     useEffect(() => {
         if (currentUser)
             showPosts()
